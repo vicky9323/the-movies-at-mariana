@@ -28,7 +28,7 @@ const MovieItem = ({ list_obj, date }) => {
 
   return (
     <>
-      <div className="h-[50px] w-[95%] mx-auto bg-slate-300 font-semibold flex items-center justify-center">
+      <div className="h-[50px] w-[95%] mx-auto my-3 bg-slate-300 font-semibold flex items-center justify-center">
         <span>Movies For Day: {formatDate(date)}</span>
       </div>
       <div className="container mx-auto w-[95%] grid lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2  gap-8">
