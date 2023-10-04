@@ -14,77 +14,51 @@ export const SearchProvider = ({ children }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [ogOptions, setogOptions] = useState([]);
 
-  const handleSearch = (e) => {
-    if (e.target.value === "" && selectedOptions.length === 0) {
-      setFilteredResults(ogMoviesList);
-    } else {
-      if (e.target.value === "") {
-        const valuesList = selectedOptions.map((item) => item.value);
-        const newfilteredResults = ogMoviesList.map((entry) => ({
-          ...entry,
-          movies: entry.movies.filter((movie) =>
-            movie.genre.some((genre) => valuesList.includes(genre))
-          ),
-        }));
-        setFilteredResults(newfilteredResults);
-      } else {
-        let newfilteredResults = ogMoviesList;
-        if (selectedOptions.length !== 0) {
-          const valuesList = selectedOptions.map((item) => item.value);
-          newfilteredResults = ogMoviesList.map((entry) => ({
+  const filterData = (search_inp, filter_list)=> {
+    if (search_inp === "" && filter_list.length === 0)
+        setFilteredResults(ogMoviesList);
+    else {
+        if (search_inp === "") {
+          const valuesList = filter_list.map((item) => item.value);
+          const newfilteredResults = ogMoviesList.map((entry) => ({
             ...entry,
             movies: entry.movies.filter((movie) =>
               movie.genre.some((genre) => valuesList.includes(genre))
             ),
           }));
+          setFilteredResults(newfilteredResults);
+        } else {
+          let newfilteredResults = ogMoviesList;
+          if (filter_list.length !== 0) {
+              const valuesList = filter_list.map((item) => item.value);
+              newfilteredResults = ogMoviesList.map((entry) => ({
+                ...entry,
+                movies: entry.movies.filter((movie) =>
+                  movie.genre.some((genre) => valuesList.includes(genre))
+                ),
+              }));
+          }
+
+          newfilteredResults = newfilteredResults.map((entry) => ({
+            date: entry.date,
+            movies: entry.movies.filter((movie) =>
+              movie.title.toLowerCase().includes(search_inp.toLowerCase())
+            ),
+          }));
+
+          setFilteredResults(newfilteredResults);
         }
 
-        newfilteredResults = newfilteredResults.map((entry) => ({
-          date: entry.date,
-          movies: entry.movies.filter((movie) =>
-            movie.title.toLowerCase().includes(e.target.value.toLowerCase())
-          ),
-        }));
+  }
+}
 
-        setFilteredResults(newfilteredResults);
-      }
-    }
-
+  const handleSearch = (e) => {
+    filterData(e.target.value, selectedOptions)
     setSearchQuery(e.target.value);
   };
 
   const handleSelection = (val) => {
-    if (searchQuery === "" && val.length === 0) {
-      setFilteredResults(ogMoviesList);
-    } else {
-      if (searchQuery === "") {
-        const valuesList = val.map((item) => item.value);
-        const newfilteredResults = ogMoviesList.map((entry) => ({
-          ...entry,
-          movies: entry.movies.filter((movie) =>
-            movie.genre.some((genre) => valuesList.includes(genre))
-          ),
-        }));
-        setFilteredResults(newfilteredResults);
-      } else {
-        const valuesList = val.map((item) => item.value);
-        let newfilteredResults = ogMoviesList.map((entry) => ({
-          ...entry,
-          movies: entry.movies.filter((movie) =>
-            movie.genre.some((genre) => valuesList.includes(genre))
-          ),
-        }));
-
-        newfilteredResults = newfilteredResults.map((entry) => ({
-          date: entry.date,
-          movies: entry.movies.filter((movie) =>
-            movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-          ),
-        }));
-
-        setFilteredResults(newfilteredResults);
-      }
-    }
+    filterData(searchQuery, val)
     setSelectedOptions(val);
   };
 
